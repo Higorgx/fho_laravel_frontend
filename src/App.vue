@@ -1,12 +1,24 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div>
+      <b-navbar type="dark" variant="dark">
+        <b-navbar-nav>
+          <b-nav-item to="/">Login</b-nav-item>
+          <b-nav-item to="/create">Criar Conta</b-nav-item>
+          <b-nav-item to="/dashboard">DashBoard</b-nav-item>
+        </b-navbar-nav>
+      </b-navbar>
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  name: "App",
+
+}
+</script>
 
 <style>
 #app {
