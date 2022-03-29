@@ -1,8 +1,20 @@
 <template>
   <div class="Dashboard">
     <div class="container">
-      <b-card
-        ><b-card-body>
+      <b-card>
+        <b-card-body>
+          <div class="row">
+            <div class="d-flex align-items-center justify-content-end">
+              <button
+                type="submit"
+                class="btn btn-dark"
+                @click="logOut()"
+                v-b-modal.modal-edit
+              >
+                LogOut
+              </button>
+            </div>
+          </div>
           <b-table
             responsive
             empty-text="Sem usuários para mostrar"
@@ -111,7 +123,7 @@
           </button>
         </template>
       </b-modal>
-     <b-modal id="modal-delete" title="Deletar">
+      <b-modal id="modal-delete" title="Deletar">
         <div class="d-block text-center mb-3">
           <h3>Deletar Usuário?</h3>
         </div>
@@ -154,7 +166,7 @@ export default {
         {
           key: "created_at",
           label: "Data",
-          sortable: true,
+          sortable: false,
           formatter: (val) => this.convertingDate(val),
         },
       ],
@@ -179,10 +191,13 @@ export default {
     this.list();
   },
   methods: {
+    logOut() {
+      localStorage.removeItem("auth");
+      this.$router.replace("/");
+    },
     async assingUser(user) {
       this.user = user;
     },
-
     required(field) {
       return field.length > 0 ? true : false;
     },
@@ -195,49 +210,41 @@ export default {
       const response = await axios.get(
         "http://localhost:8000/api/read/students"
       );
-      if (response.data?.status === 200) {
+      if (response.status === 200) {
         this.users = response.data.data;
+      } else {
+        window.alert("Falha ao listar usuários")
       }
     },
     async deleteUser() {
-      if(!this.user.passwd) { this.user.passwd}
       const response = await axios.delete(
-        "http://localhost:8000/api/delete/student/"+this.user.id);
-      if (response.data?.status === 200) {
-        window.alert('Usuário Deletado')
-        this.list()
-        this.$bvModal.hide('modal-delete')
+        "http://localhost:8000/api/delete/student/" + this.user.id
+      );
+      if (response.status === 200) {
+        window.alert("Usuário Deletado");
+        this.list();
+        this.$bvModal.hide("modal-delete");
+      } else {
+        window.alert("Falha ao excluir usuário")
       }
+
     },
     async update() {
-     
+      if (!this.user.passwd) {
+        this.user.passwd;
+      }
       const response = await axios.put(
-        "http://localhost:8000/api/update/student/", this.user.id
+        "http://localhost:8000/api/update/student/",
+        this.user
       );
-      if (response.data?.status === 200) {
-        window.alert('Usuário atualizado')
-        this.list()
-        this.$bvModal.hide('modal-edit')
+      if (response.status === 200) {
+        window.alert("Usuário atualizado");
+        this.list();
+        this.$bvModal.hide("modal-edit");
+      } else {
+        window.alert("Falha ao atualizar usuário")
       }
     },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

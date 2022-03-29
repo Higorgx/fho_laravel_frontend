@@ -1,10 +1,10 @@
 <template>
-  <div class="hello">
+  <div class="Create">
     <div class="container">
       <b-card>
         <b-card-body>
            <h6 v-if="required">Todos os campos obrigatórios</h6>
-            <h6 v-if="required.passwd">As senhas não conferem</h6>
+            <h6 v-if="required.password">As senhas não conferem</h6>
           <b-card-title>Criar Usuário</b-card-title>
           <form>
             <div class="form-group">
@@ -54,8 +54,8 @@
               <label for="exampleInputPassword1">Senha</label>
               <b-form-input
                 id="password"
-                v-model="user.passwd"
-               :state="validatePasswd(user.passwd, user.confirmPasswd)"
+                v-model="user.password"
+               :state="validatePassword(user.password, user.confirmPassword)"
                 type="password"
                 class="form-control-merge"
                 name="login-password"
@@ -66,9 +66,9 @@
             <div class="form-group mb-3">
               <label for="exampleInputPassword1">Confirme a Senha</label>
               <b-form-input
-                id="confirmPasswd"
-                v-model="user.confirmPasswd"
-                :state="validatePasswd(user.passwd, user.confirmPasswd)"
+                id="confirmPassword"
+                v-model="user.confirmPassword"
+                :state="validatePassword(user.password, user.confirmPassword)"
                 type="password"
                 class="form-control-merge"
                 name="login-password"
@@ -105,8 +105,8 @@ export default {
         email: "",
         name: "",
         course: "",
-        passwd: "",
-        confirmPasswd: ""
+        password: "",
+        confirmPassword: ""
       },
     };
   },
@@ -120,8 +120,8 @@ export default {
     BFormInput,
   },
   methods: {
-    validatePasswd(passwd, confirmPasswd) {
-      return passwd === confirmPasswd ? true : false
+    validatePassword(password, confirmPassword) {
+      return password === confirmPassword ? true : false
     },
     required(field) {
         return field.length > 0 ? true : false
@@ -131,31 +131,15 @@ export default {
         email: this.user.email,
         name: this.user.name,
         course: this.user.course,
-        passwd: this.user.confirmPasswd
+        passwd: this.user.confirmPassword
       });
       if (response.data?.status === 200) {
         window.alert("Usuário criado com sucesso");
         this.$router.push("/")
+      } else {
+        window.alert("Falha ao criar usuário")
       }
     },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
